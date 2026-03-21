@@ -1,7 +1,11 @@
 package org.example;
 
 
-import com.beust.jcommander.Parameter;
+
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -9,20 +13,32 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.bstill66.Expression.PrvLexer;
 import org.bstill66.Expression.PrvParser;
 
-import com.beust.jcommander.JCommander;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
 
 public class ValidateExpression {
 
-    public static class Args {
-        @Parameter(names = "-help", help = true)
-        public boolean help;
+    public static Namespace parse(String[] args) {
+        ArgumentParser parser = ArgumentParsers.newFor("ValidateExpression").build()
+                .defaultHelp(true)
+                .description("Validate Rule Expression");
 
-        @Parameter(names = "-i",description="File name to validate")
-        String inpFile = null;
+        parser.addArgument("infiles").nargs("*")
+                .help("Input Files to Validate");
+        Namespace ns = null;
+        try {
+            ns = parser.parseArgs(args);
+        }
+        catch (ArgumentParserException ex) {
+            parser.handleError(ex);
+            System.exit(1);
+        }
 
-        @Parameter(names = "-debug", description = "Debug mode")
-        public boolean debug = false;
+        return ns;
     }
+
 
 
     public boolean parseFile(String fname) throws Exception {
@@ -53,17 +69,25 @@ public class ValidateExpression {
 
     public static void main(String[] argv) {
 
-        Args  args = new Args();
-        JCommander jc = new JCommander(args);
-        JCommander.newBuilder()
-                .addObject(args)
-                .build()
-                .parse(argv);
+
         // Parse arguments
+        Namespace params = parse(argv);
 
         ValidateExpression  e = new ValidateExpression();
         try {
-            e.parseFile(args.inpFile);
+            List<String> infiles = params.getList("infiles");
+
+            for (String inpFile : infiles) {
+                try {
+                    e.parseFile(inpFile);
+                }
+                catch (FileNotFoundException fnf) {
+                    System.out.printf("File Not Found: %s", inpFile);
+                }
+                catch (IOException io) {
+                    System.out.printf("Error reading file: %s",inpFile);
+                }
+            }
         }
         catch (Exception _) {
 

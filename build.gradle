@@ -20,7 +20,7 @@ dependencies {
     antlr "org.antlr:antlr4:$antlrVersion"
     implementation "org.antlr:antlr4-runtime:$antlrVersion"
 
-    implementation("com.beust:jcommander:1.81")
+    implementation 'net.sourceforge.argparse4j:argparse4j:0.9.0'
 
     testImplementation(platform('org.junit:junit-bom:6.0.3'))
     testImplementation('org.junit.jupiter:junit-jupiter')

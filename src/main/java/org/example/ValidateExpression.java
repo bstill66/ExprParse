@@ -20,7 +20,6 @@ import java.util.List;
 
 public class ValidateExpression {
 
-    @SuppressWarnings("SpellCheckingInspection")
     public static Namespace parse(String[] args) {
         ArgumentParser parser = ArgumentParsers.newFor("ValidateExpression").build()
                 .defaultHelp(true)

@@ -57,7 +57,7 @@ public class ValidateExpression {
 
             // 5. Start the parsing process by calling your grammar's entry point rule
             //    (e.g., 'prog' or 'startRule'). This returns a ParseTree.
-            ParseTree tree = parser.program(); // Assuming 'prog' is the start rule in Expr.g4
+            ParseTree ptree = parser.program(); // Assuming 'prog' is the start rule in Expr.g4
 
             // 6. (Optional) Walk the parse tree using a listener or visitor to process the data
             // ParseTreeWalker walker = new ParseTreeWalker();

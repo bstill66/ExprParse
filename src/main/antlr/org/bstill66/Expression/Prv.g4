@@ -58,7 +58,7 @@ Like:
 Eidr
     : 'E' '"' EidrPrefix EidrSeg '-' EidrSeg '-' EidrSeg '-' EidrSeg '-' EidrCheck '"';
 
-EidrPrefix
+fragment EidrPrefix
     : '10.240/' | '/'?;
 
 EidrSeg

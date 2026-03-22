@@ -22,6 +22,8 @@ dependencies {
 
     implementation 'net.sourceforge.argparse4j:argparse4j:0.9.0'
 
+    implementation 'com.diogonunes:JColor:5.5.1'
+
     testImplementation(platform('org.junit:junit-bom:6.0.3'))
     testImplementation('org.junit.jupiter:junit-jupiter')
     testRuntimeOnly('org.junit.platform:junit-platform-launcher')

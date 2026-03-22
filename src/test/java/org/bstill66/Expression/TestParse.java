@@ -3,6 +3,7 @@ package org.bstill66.Expression;
 import org.junit.jupiter.api.Test;
 
 import static org.bstill66.Expression.TestUtil.parseString;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestParse {
@@ -29,6 +30,6 @@ public class TestParse {
 
     @Test
     public void parseLike() {
-        assertTrue(parseString("x ~= \"regex\""));
+        assertNotNull(parseString("x ~= \"regex\""));
     }
 }

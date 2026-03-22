@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.bstill66.Expression.PrvLexer;
 import org.bstill66.Expression.PrvParser;
+import org.bstill66.ParseUtil;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -60,50 +61,6 @@ public class ValidateExpression {
     }
 
 
-    private boolean parse(CharStream input) {
-
-
-        // 2. Create a lexer to turn the character stream into a token stream
-        PrvLexer lexer = new PrvLexer(input);
-
-        // Create a CommonTokenStream from the lexer
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-        // Create a parser from the token stream
-        PrvParser parser = new PrvParser(tokens);
-
-        // Setup Bail out strategy
-        parser.removeErrorListeners();
-        parser.setErrorHandler(new BailErrorStrategy());
-
-        try {
-            ParseTree ptree = parser.program();
-            return true;
-        }
-        catch (ParseCancellationException e) {
-            return false; // An exception means validation failed
-        }
-
-        // 6. (Optional) Walk the parse tree using a listener or visitor to process the data
-        // ParseTreeWalker walker = new ParseTreeWalker();
-        // MyListener listener = new MyListener();
-        // walker.walk(listener, tree);
-
-    }
-
-    public boolean parseFile(String fname) throws Exception {
-
-            // 1. Create a CharStream from the input file
-            CharStream input = CharStreams.fromFileName(fname);
-
-            return parse(input);
-    }
-
-    public boolean parseString(String program) {
-        CharStream cs = CharStreams.fromString(program);
-
-        return parse(cs);
-    }
 
     private static String fmtColor(AnsiFormat fmt,String tmpl, Object...args) {
         String res = String.format(tmpl,args);
@@ -116,21 +73,20 @@ public class ValidateExpression {
         // Parse arguments
         Namespace params = parse(argv);
 
-        ValidateExpression  e = new ValidateExpression();
         try {
             List<String> infiles = params.getList("infiles");
 
             for (String inpFile : infiles) {
                 try {
-                    boolean success = false;
+                    ParseTree ptree = null;
                     if (params.getBoolean("stringFlag")) {
-                        success = e.parseString(inpFile);
+                        ptree = ParseUtil.parseString(inpFile);
                     }
                     else {
-                        success = e.parseFile(inpFile);
+                        ptree = ParseUtil.parseFile(inpFile);
                     }
 
-                    if (success) {
+                    if (ptree != null) {
                         System.out.printf(fmtColor(SUCCESS,"Success: %s",inpFile));
                     }
                     else {

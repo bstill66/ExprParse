@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.bstill66.Expression.TestUtil.parseString;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSyntax {
 
@@ -15,29 +14,29 @@ public class TestSyntax {
 
     @Test
     public void ValidateList() {
-        assertTrue(parseString("var in []"));
-        assertTrue(parseString("var not in []"));
+        assertNotNull(parseString("var in []"));
+        assertNotNull(parseString("var not in []"));
 
-        assertTrue(parseString("var in [4,5,6,\"Brian\"]"));
-        assertTrue(parseString("var not in [\"Brian\",4,3]"));
+        assertNotNull(parseString("var in [4,5,6,\"Brian\"]"));
+        assertNotNull(parseString("var not in [\"Brian\",4,3]"));
 
         // Failure cases
-        assertFalse(parseString("var in y"));
-        assertFalse(parseString("var not in x"));
-        assertFalse(parseString(""));
+        assertNull(parseString("var in y"));
+        assertNull(parseString("var not in x"));
+        assertNull(parseString(""));
     }
 
     @Test
     public void validateEquality() {
-        assertTrue(parseString("x=5"));
-        assertTrue(parseString("x = \"Brian\""));
-        assertTrue(parseString("xyz = +4345"));
-        assertTrue(parseString("xyz = -4345"));
-        assertTrue(parseString("xyz = \"Helloworld\""));
+        assertNotNull(parseString("x=5"));
+        assertNotNull(parseString("x = \"Brian\""));
+        assertNotNull(parseString("xyz = +4345"));
+        assertNotNull(parseString("xyz = -4345"));
+        assertNotNull(parseString("xyz = \"Helloworld\""));
 
 
-        assertFalse(parseString("x = y"));
-        assertFalse(parseString("5 = 6"));
+        assertNull(parseString("x = y"));
+        assertNull(parseString("5 = 6"));
         //assertFalse(parseString("x = +-43"));
 
     }
@@ -45,31 +44,31 @@ public class TestSyntax {
     @Test
     public void validateEidr() {
         // all caps
-        assertTrue(parseString("x = E\"10.240/AAAA-BBBB-CCCC-DDDD-K\""));
+        assertNotNull(parseString("x = E\"10.240/AAAA-BBBB-CCCC-DDDD-K\""));
         // lower case
-        assertTrue(parseString("x=E\"10.240/aaaa-bbbb-cccc-dddd-J\""));
+        assertNotNull(parseString("x=E\"10.240/aaaa-bbbb-cccc-dddd-J\""));
 
         // Mixed case
-        assertTrue(parseString("x=E\"10.240/AaAa-BbBb-CcCd-DdDd-K\""));
+        assertNotNull(parseString("x=E\"10.240/AaAa-BbBb-CcCd-DdDd-K\""));
 
         // without prefix
-        assertTrue(parseString("x=E\"/AaAa-BbBb-CcCd-DdDd-K\""));
+        assertNotNull(parseString("x=E\"/AaAa-BbBb-CcCd-DdDd-K\""));
 
         // without /
-        assertTrue(parseString("x=E\"AaAa-BbBb-CcCd-DdDd-K\""));
+        assertNotNull(parseString("x=E\"AaAa-BbBb-CcCd-DdDd-K\""));
     }
 
     @Test
     public void validateString() {
 
         // Empty String
-        assertTrue(parseString("x = \"\""));
-        assertTrue(parseString("x = \"basic\""));
-        assertTrue(parseString("x=\"Really long string............tooo long\""));
-        assertTrue(parseString("x=\"/* comment */x = 4\""));
+        assertNotNull(parseString("x = \"\""));
+        assertNotNull(parseString("x = \"basic\""));
+        assertNotNull(parseString("x=\"Really long string............tooo long\""));
+        assertNotNull(parseString("x=\"/* comment */x = 4\""));
 
-        assertTrue(parseString("x ~= \"\""));
-        assertTrue(parseString("x ~= \"some string\""));
+        assertNotNull(parseString("x ~= \"\""));
+        assertNotNull(parseString("x ~= \"some string\""));
 
     }
 
@@ -81,12 +80,12 @@ public class TestSyntax {
 
         for (String g : good) {
             String code = String.format(codeTmpl,g);
-            assertTrue(parseString(code));
+            assertNotNull(parseString(code));
         }
 
         for (String b: bad) {
             String code = String.format(codeTmpl,b);
-            assertFalse(parseString(code));
+            assertNull(parseString(code));
         }
 
     }
@@ -103,7 +102,7 @@ public class TestSyntax {
         for (String v : vars) {
             for (String e : exps) {
                 String code = String.format(e,v);
-                assertTrue(parseString(code));
+                assertNotNull(parseString(code));
             }
         }
 
@@ -111,7 +110,7 @@ public class TestSyntax {
         final String[] invalid = {"2x","xy!","xy_$"};
         for (String inv : invalid) {
             String code = String.format("%s = 23",inv);
-            assertFalse(parseString(code));
+            assertNull(parseString(code));
         }
 
     }
@@ -122,23 +121,23 @@ public class TestSyntax {
         final String code = "xyz\t \t=\t \t\"abajsdfklaj;ldkfj;acdef\"";
         final String comment = "/* This is a comment */";
 
-        assertTrue(parseString(code));
-        assertTrue(parseString(comment + code));
-        assertTrue(parseString(code + comment));
+        assertNotNull(parseString(code));
+        assertNotNull(parseString(comment + code));
+        assertNotNull(parseString(code + comment));
 
         for (int i=1;i<code.length();i++) {
             char ch = code.charAt(i);
             if (Character.isWhitespace(ch) ) {
                 String mycode = code.substring(0, i) + comment + code.substring(i);
-                assertTrue(parseString(mycode));
+                assertNotNull(parseString(mycode));
             }
         }
 
         // end of line comment
-        assertTrue(parseString(code + "// this is a comment"));
-        assertTrue(parseString(code + "// -->  /* embedded */"));
-        assertTrue(parseString(code + "// -->  /* embedded */\n"));
-        assertTrue(parseString(code + "// -->  /* embedded */\r\n"));
+        assertNotNull(parseString(code + "// this is a comment"));
+        assertNotNull(parseString(code + "// -->  /* embedded */"));
+        assertNotNull(parseString(code + "// -->  /* embedded */\n"));
+        assertNotNull(parseString(code + "// -->  /* embedded */\r\n"));
 
     }
 
